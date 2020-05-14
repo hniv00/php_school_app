@@ -29,7 +29,7 @@
         ':email'=>$email
       ]);
       if ($mailQuery->rowCount()>0){
-        $errors['name']='Uživatelský účet s touto e-mailovou adresou již existuje.';
+        $errors['name']='Uživatel s touto e-mailovou adresou již existuje.';
       }
     }
     #endregion kontrola emailu
@@ -54,11 +54,9 @@
         ':password'=>$password
       ]);
 
-      //uživatele rovnou přihlásíme
+      //uživatele rovnou přihlásíme a přesměrujeme na homepage
       $_SESSION['user_id']=$db->lastInsertId();
       $_SESSION['user_name']=$name;
-
-      //přesměrování na homepage
       header('Location: index.php');
       exit();
     }
@@ -69,42 +67,46 @@
   include __DIR__.'/inc/header.php';
 ?>
 
-  <h2>Registrace nového uživatele</h2>
-  <form method="post">
+<h2>Registrace nového uživatele</h2>
+<form method="post">
     <div class="form-group">
-      <label for="name">Jméno či přezdívka:</label>
-      <input type="text" name="name" id="name" required class="form-control <?php echo (!empty($errors['name'])?'is-invalid':''); ?>"
-             value="<?php echo htmlspecialchars(@$name);?>" />
-      <?php
+        <label for="name">Jméno či přezdívka:</label>
+        <input type="text" name="name" id="name" required
+            class="form-control <?php echo (!empty($errors['name'])?'is-invalid':''); ?>"
+            value="<?php echo htmlspecialchars(@$name);?>" />
+        <?php
         echo (!empty($errors['name'])?'<div class="invalid-feedback">'.$errors['name'].'</div>':'');
       ?>
     </div>
     <div class="form-group">
-      <label for="email">E-mail:</label>
-      <input type="email" name="email" id="email" required class="form-control <?php echo (!empty($errors['email'])?'is-invalid':''); ?>"
-             value="<?php echo htmlspecialchars(@$email);?>"/>
-      <?php
+        <label for="email">E-mail:</label>
+        <input type="email" name="email" id="email" required
+            class="form-control <?php echo (!empty($errors['email'])?'is-invalid':''); ?>"
+            value="<?php echo htmlspecialchars(@$email);?>" />
+        <?php
         echo (!empty($errors['email'])?'<div class="invalid-feedback">'.$errors['email'].'</div>':'');
       ?>
     </div>
     <div class="form-group">
-      <label for="password">Heslo:</label>
-      <input type="password" name="password" id="password" required class="form-control <?php echo (!empty($errors['password'])?'is-invalid':''); ?>" />
-      <?php
+        <label for="password">Heslo:</label>
+        <input type="password" name="password" id="password" required
+            class="form-control <?php echo (!empty($errors['password'])?'is-invalid':''); ?>" />
+        <?php
         echo (!empty($errors['password'])?'<div class="invalid-feedback">'.$errors['password'].'</div>':'');
       ?>
     </div>
     <div class="form-group">
-      <label for="password2">Potvrzení hesla:</label>
-      <input type="password" name="password2" id="password2" required class="form-control <?php echo (!empty($errors['password2'])?'is-invalid':''); ?>" />
-      <?php
+        <label for="password2">Potvrzení hesla:</label>
+        <input type="password" name="password2" id="password2" required
+            class="form-control <?php echo (!empty($errors['password2'])?'is-invalid':''); ?>" />
+        <?php
         echo (!empty($errors['password2'])?'<div class="invalid-feedback">'.$errors['password2'].'</div>':'');
       ?>
     </div>
-    <button type="submit" class="btn btn-primary">registrovat se</button>
-    <a href="login.php" class="btn btn-light">přihlásit se</a>
-    <a href="index.php" class="btn btn-light">zrušit</a>
-  </form>
+    <button type="submit" class="btn btn-info">Registrovat se</button>
+    <a href="login.php" class="btn btn-light">Přihlásit se</a>
+    <a href="index.php" class="btn btn-light">Zrušit</a>
+</form>
 
 <?php
   //vložíme do stránek patičku

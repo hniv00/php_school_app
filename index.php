@@ -6,11 +6,12 @@
   include __DIR__.'/inc/header.php';
 
   if (!empty($_SESSION['user_id'])){
-    echo '<p>Přihlášený uživatel: <strong>'.htmlspecialchars($_SESSION['user_name']).'</strong></p>';
-    echo '<a href="logout.php" class="btn btn-primary">odhlásit se</a>';
+    echo '<p>Drazí čtenáři, rádi Vás vidíme. Projděte si knižní katalog a směle si vypůjčete, na co máte zrovna chuť.</p>';
+    echo '<p>Katalog knih</p>';
+    echo '<p>Moje výpůjčky</p>';
   }else{
-    echo '<p>Uživatel není přihlášen.</p>';
-    echo '<a href="login.php" class="btn btn-primary">přihlásit se</a>';
+    echo '<p>Vítejte na stránkách knihovny. Pro další akce musíte být přihlášeni.</p>';
+    echo '<div class="row"><a href="login.php" class="btn btn-info text-light">Přihlásit se</a></div>';
   }
 
   //vložíme do stránek patičku

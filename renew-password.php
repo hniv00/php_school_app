@@ -3,7 +3,7 @@
   require_once 'inc/user.php';
 
   if (!empty($_SESSION['user_id'])){
-    //uživatel už je přihlášený, nemá smysl, aby se přihlašoval znovu
+    //uživatel už je přihlášený, nemá smysl obnova hesla
     header('Location: index.php');
     exit();
   }
@@ -20,8 +20,9 @@
       ':id'=>$_REQUEST['request'],
     ]);
     if ($existingRequest=$query->fetch(PDO::FETCH_ASSOC)){
+      // TODO: tenhle if nefunguje!!!
       //zkontrolujeme, jestli je kód ještě platný
-      if (strtotime($existingRequest->created)<(time()-24*3600)){//kontrola, jestli není kód starší než 24 hodin
+      if (strtotime($existingRequest->created)<(time()-24*3600)){ // kontrola, jestli není kód starší než 24 hodin
         $invalidCode=true;
       }
     }else{
@@ -59,11 +60,9 @@
         ]);
         $user=$userQuery->fetch(PDO::FETCH_ASSOC);
 
-        //uživatele rovnou přihlásíme
+        //uživatele rovnou přihlásíme a přesměrujeme na homepage
         $_SESSION['user_id']=$user['user_id'];
         $_SESSION['user_name']=$user['name'];
-
-        //přesměrování na homepage
         header('Location: index.php');
         exit();
       }
@@ -78,7 +77,7 @@
 
   if ($invalidCode){
     echo '<p class="text-danger">Kód pro obnovu hesla již není platný.</p>';
-    echo '<a href="index.php" class="btn btn-light">zpět na homepage</a>';
+    echo '<a href="index.php" class="btn btn-light">Zpět na homepage</a>';
   }else{
     echo '<form method="post">
             <div class="form-group">
@@ -87,7 +86,7 @@
               '.($invalidPassword?'<div class="invalid-feedback">'.$invalidPassword.'</div>':'').'
             </div>
             <div class="form-group">
-              <label for="password2">Potvrzení hesla:</label>
+              <label for="password2">Nové heslo znovu:</label>
               <input type="password" name="password2" id="password2" required class="form-control '.($invalidPassword?'is-invalid':'').'" />
             </div>
             
@@ -95,8 +94,8 @@
             <input type="hidden" name="user" value="'.htmlspecialchars($_REQUEST['user']).'" />
             <input type="hidden" name="request" value="'.htmlspecialchars($_REQUEST['request']).'" />
             
-            <button type="submit" class="btn btn-primary">změnit heslo</button>
-            <a href="index.php" class="btn btn-light">zrušit</a>
+            <button type="submit" class="btn btn-info">Uložit nové heslo</button>
+            <a href="index.php" class="btn btn-light">Zrušit</a>
           </form>';
   }
 

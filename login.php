@@ -42,24 +42,27 @@
   include __DIR__.'/inc/header.php';
 ?>
 
-  <h2>Přihlášení uživatele</h2>
-  <form method="post">
+<h2>Přihlášení uživatele</h2>
+<form method="post">
     <div class="form-group">
-      <label for="email">E-mail:</label>
-      <input type="email" name="email" id="email" required class="form-control <?php echo ($errors?'is-invalid':''); ?>" value="<?php echo htmlspecialchars(@$_POST['email'])?>"/>
-      <?php
+        <label for="email">E-mail:</label>
+        <input type="email" name="email" id="email" required
+            class="form-control <?php echo ($errors?'is-invalid':''); ?>"
+            value="<?php echo htmlspecialchars(@$_POST['email'])?>" />
+        <?php
         echo ($errors?'<div class="invalid-feedback">Neplatná kombinace přihlašovacího e-mailu a hesla.</div>':'');
       ?>
     </div>
     <div class="form-group">
-      <label for="password">Heslo:</label>
-      <input type="password" name="password" id="password" required class="form-control <?php echo ($errors?'is-invalid':''); ?>" />
+        <label for="password">Heslo:</label>
+        <input type="password" name="password" id="password" required
+            class="form-control <?php echo ($errors?'is-invalid':''); ?>" />
     </div>
-    <button type="submit" class="btn btn-primary">přihlásit se</button>
-    <a href="forgotten-password.php" class="btn btn-light">zapomněl(a) jsem heslo</a>
-    <a href="registration.php" class="btn btn-light">registrovat se</a>
-    <a href="index.php" class="btn btn-light">zrušit</a>
-  </form>
+    <button type="submit" class="btn btn-info">Přihlásit se</button>
+    <a href="forgotten-password.php" class="btn btn-light">Zapomněl(a) jsem heslo</a>
+    <a href="registration.php" class="btn btn-light">Registrovat se</a>
+    <a href="index.php" class="btn btn-light">Zrušit</a>
+</form>
 
 <?php
   //vložíme do stránek patičku

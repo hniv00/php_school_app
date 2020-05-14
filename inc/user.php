@@ -4,7 +4,7 @@
 
   require_once 'db.php'; //načteme připojení k databázi
 
-  require_once __DIR__.'/../vendor/autoload.php';//načtení class loaderu vytvořeného composerem
+  require_once __DIR__.'/../vendor/autoload.php'; //načtení class loaderu vytvořeného composerem
 
   #region kontrola, jestli je přihlášený uživatel platný
   if (!empty($_SESSION['user_id'])){
