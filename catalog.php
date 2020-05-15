@@ -34,7 +34,7 @@ Celkový počet titulů:
 <br /><br />
 
 <a class="text-info" href="new.php">Přidat nový titul</a>
-<!--odkaz pro přidání nového zboží-->
+<!--odkaz pro přidání nové knihy-->
 
 <br /><br />
 
@@ -53,7 +53,7 @@ Celkový počet titulů:
     <!--region výpis jednoho řádku knihy-->
     <tr>
         <td class="center">
-            <a class="text-info" href='buy.php?id=<?php echo $row['book_id']; ?>'>Vypůjčit</a>
+            <a class="text-info" href='borrow.php?id=<?php echo $row['book_id']; ?>'>Vypůjčit</a>
         </td>
 
         <td>
@@ -72,11 +72,8 @@ Celkový počet titulů:
         <td><?php echo mb_strimwidth(htmlspecialchars($row['description']), 0, 100, "..."); ?></td>
 
         <td class="center">
-            <a class="text-info" href='update_optimistic.php?id=<?php echo $row['book_id']; ?>'>Edit (optimistic
-                lock)</a> |
-            <a class="text-info" href='update_pessimistic.php?id=<?php echo $row['book_id']; ?>'>Edit (pessimistic
-                lock)</a> |
-            <a class="text-info" href='delete.php?id=<?php echo $row['book_id']; ?>'>Delete</a>
+            <a class="text-info" href='update-pessimistic.php?id=<?php echo $row['book_id']; ?>'>Editovat</a> |
+            <a class="text-info" href='delete.php?id=<?php echo $row['book_id']; ?>'>Odstranit</a>
         </td>
     </tr>
     <!--endregion výpis jednoho řádku knihy-->
