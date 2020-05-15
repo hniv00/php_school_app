@@ -20,13 +20,17 @@
       ':id'=>$_REQUEST['request'],
     ]);
     if ($existingRequest=$query->fetch(PDO::FETCH_ASSOC)){
-      // TODO: tenhle if nefunguje!!!
+      // TODO: tenhle if nefunguje, jelikož select mi nic nevrací
       //zkontrolujeme, jestli je kód ještě platný
+      $existingRequest=$query->fetch(PDO::FETCH_ASSOC);
+      $createdAt=$existingRequest['created'];
       if (strtotime($existingRequest->created)<(time()-24*3600)){ // kontrola, jestli není kód starší než 24 hodin
         $invalidCode=true;
+        echo '<p>Tu je kód: '.strtotime($existingRequest->created).'</p>';
       }
     }else{
       $invalidCode=true;
+      echo '<p>Nenajde se to v DB</p>';
     }
     #endregion kontrola, jestli se daný kód shoduje s údaji v databázi
 
