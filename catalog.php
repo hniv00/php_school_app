@@ -33,8 +33,11 @@ Celkový počet titulů:
 
 <br /><br />
 
-<a class="text-info" href="new.php">Přidat nový titul</a>
 <!--odkaz pro přidání nové knihy-->
+<?php if(!empty($_SESSION['user_id']) && ($_SESSION['user_admin']='1')){ ?>
+<a class="text-info" href="new.php">Přidat nový titul</a>
+<?php  
+} ?>
 
 <br /><br />
 
@@ -42,7 +45,6 @@ Celkový počet titulů:
 <!--region tabulka s výpisem knih-->
 <table class="table table-dark table-hover">
     <tr>
-        <th></th>
         <th>Název</th>
         <th>Autor</th>
         <th>Popis</th>
@@ -52,9 +54,6 @@ Celkový počet titulů:
     <?php foreach($books as $row){ ?>
     <!--region výpis jednoho řádku knihy-->
     <tr>
-        <td class="center">
-            <a class="text-info" href='borrow.php?id=<?php echo $row['book_id']; ?>'>Vypůjčit</a>
-        </td>
 
         <td>
             <strong><?php echo htmlspecialchars($row['title']); ?> </strong>
@@ -69,11 +68,23 @@ Celkový počet titulů:
           }
           #region výpis autorů
         ?></td>
-        <td><?php echo mb_strimwidth(htmlspecialchars($row['description']), 0, 100, "..."); ?></td>
+        <td><?php echo mb_strimwidth(htmlspecialchars($row['description']), 0, 70, "..."); ?></td>
 
         <td class="center">
+            <!--pro přihlášeného uživatele-->
+            <?php
+            if (!empty($_SESSION['user_id']) && ($_SESSION['user_admin']!='1')){?>
+            <a class="text-info" href='borrow.php?id=<?php echo $row['book_id']; ?>'>Vypůjčit</a>
+            <?php
+      }            ?>
+            <!--pro přihlášeného administrátora-->
+            <?php
+        if(!empty($_SESSION['user_id']) && ($_SESSION['user_admin']='1')){?>
             <a class="text-info" href='update-pessimistic.php?id=<?php echo $row['book_id']; ?>'>Editovat</a> |
             <a class="text-info" href='delete.php?id=<?php echo $row['book_id']; ?>'>Odstranit</a>
+            <?php
+      }  ?>
+
         </td>
     </tr>
     <!--endregion výpis jednoho řádku knihy-->

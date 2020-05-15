@@ -24,11 +24,9 @@
       //zkontrolujeme, jestli je kód ještě platný (není starší než 24 hodin)
       if (strtotime($existingRequest['created'])<(time()-24*3600)){ 
         $invalidCode=true;
-        echo '<p>Tu je kód: '.strtotime($existingRequest['created']).'</p>';
       }
     }else{
-      $invalidCode=true;
-      echo '<p>Nenajde se to v DB</p>';
+      $invalidCode=true; // kód nenalezen v DB
     }
     #endregion kontrola, jestli se daný kód shoduje s údaji v databázi
 

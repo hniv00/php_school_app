@@ -50,12 +50,11 @@
 
     $title=$_POST['title'];
     $description=$_POST['description'];
-    $price=floatval($_POST['price']);
 
     if (empty($formErrors)){
       #region uložení zboží do DB
 	    //při uložení zboží kromě změněných dat také vynulujeme zámky nastavené pro editaci (aby mohl zboží případně editovat další uživatel)
-      $stmt = $db->prepare('UPDATE shop_books SET title=:title, description=:description, price=:price, last_edit_by=NULL, last_edit_start=NULL WHERE id=:id LIMIT 1;');
+      $stmt = $db->prepare('UPDATE shop_books SET title=:title, description=:description, price=:price, last_edit_by=NULL, last_edit_start=NULL WHERE book_id=:id LIMIT 1;');
       $stmt->execute([
         ':title'=> $title,
         ':description'=> $description,
@@ -70,45 +69,34 @@
     }
   }
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <title>PHP Shopping App</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-</head>
+<h2>Úprava knižního titulu</h2>
 
-<body>
-    <?php include 'navbar.php' ?>
-
-    <h1>Update books</h1>
-
-    <?php
+<?php
       if (!empty($formErrors)){
         echo '<p style="color:red;">'.$formErrors.'</p>';
       }
     ?>
 
-    <form method="post">
-        <label for="title">Název</label><br />
-        <input type="text" name="title" id="title" value="<?php echo htmlspecialchars(@$title);?>" required><br /><br />
+<form method="post">
+    <label for="title">Název</label><br />
+    <input type="text" name="title" id="title" value="<?php echo htmlspecialchars(@$title);?>" required><br /><br />
 
-        <label for="price">Price<br />
-            <input type="number" min="0" name="price" id="price" required
-                value="<?php echo htmlspecialchars(@$price)?>"><br /><br />
+    <label for="price">Price<br />
+        <input type="number" min="0" name="price" id="price" required
+            value="<?php echo htmlspecialchars(@$price)?>"><br /><br />
 
-            <label for="description">Description</label><br />
-            <textarea name="description"
-                id="description"><?php echo htmlspecialchars(@$description)?></textarea><br /><br />
+        <label for="description">Popis</label><br />
+        <textarea name="description"
+            id="description"><?php echo htmlspecialchars(@$description)?></textarea><br /><br />
 
-            <br />
+        <br />
 
-            <input type="hidden" name="id" value="<?php echo $books['id']; ?>" />
+        <input type="hidden" name="id" value="<?php echo $books['id']; ?>" />
 
-            <input type="submit" value="Save" /> or <a href="index.php">Cancel</a>
+        <input type="submit" value="Save" /> or <a href="index.php">Cancel</a>
 
-    </form>
+</form>
 
 </body>
 
