@@ -5,7 +5,6 @@
   //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
-  //pomocné proměnné pro přípravu dat do formuláře
   $authorId='';
   $name='';
 
@@ -25,7 +24,6 @@
 
   $errors=[];
   if (!empty($_POST)){
-    #region zpracování formuláře
     #region kontrola textu
     $name=trim(@$_POST['name']);
     if (empty($name)){
@@ -56,7 +54,6 @@
       exit();
       #endregion přesměrování
     }
-    #endregion zpracování formuláře
   }
 ?>
 
@@ -73,8 +70,8 @@
 
     <div class="form-group">
         <label for="name">Jméno autora</label>
-        <textarea name="text" id="name" required
-            class="form-control <?php echo (!empty($errors['name'])?'is-invalid':''); ?>"><?php echo htmlspecialchars(@$name)?></textarea>
+        <textarea name="name" id="name" required
+            class="form-control <?php echo (!empty($errors['name'])?'is-invalid':''); ?>"><?php echo htmlspecialchars(@$name);?></textarea>
         <?php
         if (!empty($errors['name'])){
           echo '<div class="invalid-feedback">'.$errors['name'].'</div>';

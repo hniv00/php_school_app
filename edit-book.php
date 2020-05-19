@@ -55,8 +55,8 @@
   if (!empty($_POST)) {
     $formErrors=[];
 
-    $title=$_POST['title'];
-    $description=$_POST['description'];
+    $title=trim(@$_POST['title']);
+    $description=trim(@$_POST['description']);
 
     #region kontrola zaslaných dat
     if (empty($title)){
@@ -96,7 +96,13 @@
   }
 ?>
 
-<h2>Úprava knižního titulu</h2>
+<?php
+  if ($bookId){
+    echo '<h2>Úprava knižního titulu</h2>';
+  }else{
+    echo '<h2>Nový knižní titul</h2>';
+  }
+?>
 
 <?php
       if (!empty($formErrors)){
@@ -106,6 +112,8 @@
 
 <div class="container">
     <form method="post">
+        <input type="hidden" name="id" value="<?php echo $bookId; ?>" />
+
         <div class="form-group">
             <label for="title">Název</label><br />
             <input type="text" class="form-control" name="title" id="title"
@@ -118,8 +126,6 @@
 
         </div>
         <br />
-
-        <input type="hidden" name="id" value="<?php echo $bookId; ?>" />
 
         <button type="submit" class="btn btn-info">Uložit</button>
         <a href="catalog.php" class="btn btn-light">Zrušit</a>
