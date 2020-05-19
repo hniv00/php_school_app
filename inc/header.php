@@ -26,9 +26,16 @@
                             <a class="nav-link text-light" href="catalog.php">Katalog knih</a>
                         </li>
                         <?php 
-                          if (!empty($_SESSION['user_id'])){
+                          if (!empty($_SESSION['user_id'] && ($_SESSION['admin_rights']='0'))){
                             echo '<li class="nav-item">
                                     <a class="nav-link text-light" href="#">Moje výpůjčky</a>
+                                  </li>';
+                          }
+                        ?>
+                        <?php 
+                          if (!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']='1')){
+                            echo '<li class="nav-item">
+                                    <a class="nav-link text-light" href="authors.php">Seznam autorů</a>
                                   </li>';
                           }
                         ?>

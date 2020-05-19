@@ -17,7 +17,7 @@
       //uživatel už není v DB, nebo není aktivní => musíme ho odhlásit
       unset($_SESSION['user_id']);
       unset($_SESSION['user_name']);
-      unset($_SESSION['user_admin']);
+      unset($_SESSION['admin_rights']);
       header('Location: index.php');
       exit();
     }
