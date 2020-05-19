@@ -6,7 +6,7 @@
     //smažeme ze session identifikaci uživatele
     unset($_SESSION['user_id']);
     unset($_SESSION['user_name']);
-    unset($_SESSION['user_admin']);
+    unset($_SESSION['admin_rights']);
   }
 
   //přesměrujeme uživatele na homepage

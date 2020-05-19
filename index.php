@@ -11,5 +11,9 @@
     echo '<p>Vítejte na stránkách knihovny. Bez přihlášení si můžete prohlédnout náš knižní katalog. Pro další akce musíte být přihlášeni.</p>';
   }
 
+  exit(var_dump($_SESSION['admin_rights']));
+  exit(var_dump($_SESSION['user_name']));
+
+
   //vložíme do stránek patičku
   include __DIR__.'/inc/footer.php';

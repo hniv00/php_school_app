@@ -84,5 +84,4 @@
 </form>
 
 <?php
-  //vložíme do stránek patičku
   include 'inc/footer.php';

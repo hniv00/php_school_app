@@ -34,7 +34,7 @@ Celkový počet titulů:
 <br /><br />
 
 <!--odkaz pro přidání nové knihy-->
-<?php if(!empty($_SESSION['user_id']) && ($_SESSION['user_admin']='1')){ ?>
+<?php if(!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='1')){ ?>
 <a class="text-info" href="edit-book.php">Přidat nový titul</a>
 <?php  
 } ?>
@@ -73,15 +73,16 @@ Celkový počet titulů:
         <td class="center">
             <!--pro přihlášeného uživatele-->
             <?php
-            if (!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']='0')){?>
+            if (!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='0')){?>
             <a class="text-info" href='borrow.php?id=<?php echo $row['book_id']; ?>'>Vypůjčit</a>
             <?php
           }            ?>
             <!--pro přihlášeného administrátora-->
             <?php
-            if(!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']='1')){?>
+            if(!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='1')){?>
             <a class="text-info" href='edit-book.php?id=<?php echo $row['book_id']; ?>'>Editovat</a> |
-            <a class="text-info" href='delete-book.php?id=<?php echo $row['book_id']; ?>'>Odstranit</a>
+            <a class="text-info" href='delete-book.php?id=<?php echo $row['book_id']; ?>'
+                onclick="return confirm('Opravdu si přejete záznam odstranit?')">Odstranit</a>
             <?php
           }  ?>
 

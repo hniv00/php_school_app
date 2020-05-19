@@ -53,7 +53,8 @@ Celkový počet autorů v databázi:
         </td>
         <td class="center">
             <a class="text-info" href='edit-author.php?id=<?php echo $row['author_id']; ?>'>Editovat</a> |
-            <a class="text-info" href='delete-author.php?id=<?php echo $row['author_id']; ?>'>Odstranit</a>
+            <a class="text-info" href='delete-author.php?id=<?php echo $row['author_id']; ?>'
+                onclick="return confirm('Opravdu si přejete záznam odstranit?')">Odstranit</a>
         </td>
     </tr>
     <?php } ?>
@@ -63,7 +64,7 @@ Celkový počet autorů v databázi:
 
 <!--region výpis stránkování-->
 <div>
-    <ul class="pagination justify-content-center">
+    <ul class=" pagination justify-content-center">
         <?php
           for($i=1; $i<=ceil($count/10); $i++){
             echo '<li class="page-item"><a class="text-info page-link '.($offset/10+1==$i?'active':'').'" href="authors.php?offset='.(($i-1)*10).'">'.$i.'</a></li>';
