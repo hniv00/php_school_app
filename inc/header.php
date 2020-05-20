@@ -34,8 +34,14 @@
                         ?>
                         <?php 
                           if (!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='1')){
-                            echo '<li class="nav-item">
-                                    <a class="nav-link text-light" href="authors.php">Seznam autorů</a>
+                              echo '<li class="nav-item">
+                                      <a class="nav-link text-light" href="authors.php">Seznam autorů</a>
+                                    </li>';
+                              echo '<li class="nav-item">
+                                    <a class="nav-link text-light" href="current-loans.php">Přehled výpůjček</a>
+                                  </li>';
+                              echo '<li class="nav-item">
+                                    <a class="nav-link text-light" href="#">Uživatelé</a>
                                   </li>';
                           }
                         ?>
