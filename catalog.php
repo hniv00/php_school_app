@@ -31,7 +31,7 @@
 Celkový počet titulů:
 <strong><?php echo $count;/*v proměnné $count máme číslo, nemusíme tedy ošetřovat speciální znaky*/ ?></strong>
 
-<br /><br />
+<br />
 
 <!--odkaz pro přidání nové knihy-->
 <?php if(!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='1')){ ?>
@@ -74,7 +74,7 @@ Celkový počet titulů:
             <!--pro přihlášeného uživatele-->
             <?php
             if (!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='0') && ($row['currently_borrowed']!=='1')){?>
-            <a class="text-info"
+            <a class="text-info" onclick="return confirm('Opravdu si chcete vypůjčit tuto knihu?')"
                 href='borrow.php?id=<?php echo $row['book_id']; ?>&user=<?php echo $_SESSION['user_id']; ?>'>Vypůjčit</a>
             <?php
           }            ?>
