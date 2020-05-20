@@ -74,13 +74,15 @@ Celkový počet titulů:
             <!--pro přihlášeného uživatele-->
             <?php
             if (!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='0') && ($row['currently_borrowed']!=='1')){?>
-            <a class="text-info" href='borrow.php?id=<?php echo $row['book_id']; ?>'>Vypůjčit</a>
+            <a class="text-info"
+                href='borrow.php?id=<?php echo $row['book_id']; ?>&user=<?php echo $_SESSION['user_id']; ?>'>Vypůjčit</a>
             <?php
           }            ?>
             <!--pro přihlášeného administrátora-->
             <?php
             if(!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='1')){?>
-            <a class="text-info" href='edit-book.php?id=<?php echo $row['book_id']; ?>'>Editovat</a> |
+            <a class="text-info" href='edit-book.php?id=<?php echo $row['book_id']; ?>'>Editovat</a>
+            |
             <a class="text-info" href='delete-book.php?id=<?php echo $row['book_id']; ?>'
                 onclick="return confirm('Opravdu si přejete záznam odstranit?')">Odstranit</a>
             <?php

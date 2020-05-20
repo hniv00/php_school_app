@@ -28,7 +28,7 @@
                         <?php 
                           if (!empty($_SESSION['user_id']) && ($_SESSION['admin_rights']=='0')){
                             echo '<li class="nav-item">
-                                    <a class="nav-link text-light" href="#">Moje výpůjčky</a>
+                                    <a class="nav-link text-light" href="my-borrows.php">Moje výpůjčky</a>
                                   </li>';
                           }
                         ?>
