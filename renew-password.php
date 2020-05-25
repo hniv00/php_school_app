@@ -1,5 +1,4 @@
 <?php
-  //načteme připojení k databázi a inicializujeme session
   require_once 'inc/user.php';
 
   if (!empty($_SESSION['user_id'])){
@@ -70,7 +69,6 @@
     }
   }
 
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
   echo '<h2>Obnova zapomenutého hesla</h2>';
@@ -99,5 +97,4 @@
           </form>';
   }
 
-  //vložíme do stránek patičku
   include __DIR__.'/inc/footer.php';

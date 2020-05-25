@@ -2,7 +2,6 @@
   //přístup jen pro admina
   require 'inc/admin-required.php';
 
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
   $title='';
@@ -12,13 +11,13 @@
   #region načtení knihy k aktualizaci a výpočet zámku pro pessimistic lock
   // edit_expired je výpočet zámku s boolean hodnotou, jestli již zámek vypršel (starší než 5 minut)
   if (!empty($_REQUEST['id'])){
-  $stmt = $db->prepare('SELECT books.*, now() > last_edit_start + INTERVAL 5 MINUTE AS edit_expired FROM books WHERE book_id=:id');
+  $stmt = $db->prepare('SELECT books.*, users.email, now() > last_edit_start + INTERVAL 5 MINUTE AS edit_expired FROM books left join users on (books.last_edit_by=users.user_id) WHERE book_id=:id');
   $stmt->execute([':id'=>@$_REQUEST['id']]);
   $books = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$books){
-      //pokud kniha neexistuje (např. bylo mezitím smazáno), nepokračujeme dál - i když chyba by určitě mohla být vypsána hezčeji :)
-      die("Kniha neexistuje.");
+      // kniha neexistuje 
+      die("Zadaná kniha neexistuje. Zkontrolujte, že jste vybrali správně a zkuste to, prosím, znovu.");
     }
 
   $bookId=$books['book_id'];
@@ -27,26 +26,17 @@
   #endregion načtení knihy k aktualizaci a výpočet zámku pro pessimistic lock
 
   #region vyřešení pesimistického zámku pro úpravu
-  /*
-   * PESIMISTIC LOCK:
-   * U zboží kontrolujeme, jestli jej nemá pro úpravu otevřený jiný uživatel.
-   * Pokud ano, tak neumožníme pokračovat k editačnímu formuláři.
-   * Pokud ne, zboží zamkneme pro úpravu aktuálně přihlášeným uživatele (a znemožníme tak úpravu ostatním).
-   *
-   * Zámek má časově omezenou platnost - v tomto případě na 5 minut. Pokud zámek vypršel, tak jej ignorujeme.
-   * Pokud má zboží zamčené aktuálně přihlášený uživatel, klidně úpravu umožníme - uživatel nemůže zamknout sám sebe.
-   */
-
+  // zámek s časově omezenou platností 5 minut
   if (
-    !empty($books["last_edit_by"]) && 								//toto zboží je právě upravováno
-    $books["last_edit_by"] != $currentUser['user_id'] && 	//úpravu provádí jiný než aktuálně přihlášený uživatel
-    !$books['edit_expired'] 																	  //zámek ještě nevypršel
+    !empty($books["last_edit_by"]) && 								
+    $books["last_edit_by"] != $currentUser['user_id'] && 	
+    !$books['edit_expired'] 																	  
   ){
-    //zobrazíme uživateli informaci o tom, kdo zboží aktuálně upravuje
+    // pokud knihu někdo jiný upravuje a zámek ještě nevypršel - zobrazíme, kdo zboží aktuálně upravuje
     die("Knihu aktuálně upravuje uživatel ".$books['email']);
   }
 
-  //pokud není dané zboží zamčené k úpravě, nebo zámek vypršel, nastavíme zámek nový
+  // pokud kniha není zamčená k úpravě, nebo zámek vypršel, nastavíme zámek nový
   $stmt = $db->prepare("UPDATE books SET last_edit_start=NOW(), last_edit_by=:user WHERE book_id=:id");
   $stmt->execute([':user'=> $currentUser["user_id"], ':id'=> $_GET['id']]);
   #endregion vyřešení pesimistického zámku pro úpravu
@@ -118,12 +108,21 @@
             <label for="title">Název</label><br />
             <input type="text" class="form-control" name="title" id="title"
                 value="<?php echo htmlspecialchars(@$title);?>" required>
+            <?php
+                  if (!empty($errors['title'])){
+                    echo '<div class="invalid-feedback">'.$errors['title'].'</div>';
+                  }
+                ?>
         </div>
         <div class="form-group">
             <label for="description">Popis</label><br />
             <textarea class="form-control" name="description"
                 id="description"><?php echo htmlspecialchars(@$description)?></textarea>
-
+            <?php
+              if (!empty($errors['description'])){
+                echo '<div class="invalid-feedback">'.$errors['description'].'</div>';
+              }
+            ?>
         </div>
         <br />
 
@@ -136,3 +135,6 @@
 </body>
 
 </html>
+
+<?php
+  include __DIR__.'/inc/footer.php';

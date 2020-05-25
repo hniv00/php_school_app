@@ -1,5 +1,4 @@
 <?php
-  //načteme připojení k databázi a inicializujeme session
   require_once 'inc/user.php';
 
   if (!empty($_SESSION['user_id'])){
@@ -57,6 +56,7 @@
       //uživatele rovnou přihlásíme a přesměrujeme na homepage
       $_SESSION['user_id']=$db->lastInsertId();
       $_SESSION['user_name']=$name;
+      $_SESSION['admin_rights']='0';
       header('Location: index.php');
       exit();
     }
@@ -109,5 +109,4 @@
 </form>
 
 <?php
-  //vložíme do stránek patičku
   include __DIR__.'/inc/footer.php';

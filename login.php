@@ -1,9 +1,8 @@
 <?php
-  //načteme připojení k databázi a inicializujeme session
   require_once 'inc/user.php';
 
   if (!empty($_SESSION['user_id'])){
-    //uživatel už je přihlášený, nemá smysl, aby se přihlašoval znovu
+    // uživatel už je přihlášený, nemá smysl, aby se přihlašoval znovu
     header('Location: index.php');
     exit();
   }
@@ -32,14 +31,12 @@
       }else{
         $errors=true;
       }
-
     }else{
       $errors=true;
     }
     #endregion zpracování formuláře
   }
 
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 ?>
 

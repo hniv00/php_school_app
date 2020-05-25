@@ -1,8 +1,6 @@
 <?php
-  //přístup jen pro admina
   require 'inc/admin-required.php';
   
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
   $authorId='';

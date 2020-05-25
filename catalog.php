@@ -1,8 +1,6 @@
 <?php
-  //načteme připojení k databázi a inicializujeme session
   require_once 'inc/user.php';
 
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
     #region zjištění hodnoty offsetu pro stránkování knih
@@ -29,7 +27,7 @@
 <h2>Katalog knih</h2>
 
 Celkový počet titulů:
-<strong><?php echo $count;/*v proměnné $count máme číslo, nemusíme tedy ošetřovat speciální znaky*/ ?></strong>
+<strong><?php echo $count; ?></strong>
 
 <br />
 
@@ -54,7 +52,6 @@ Celkový počet titulů:
     <?php foreach($books as $row){ ?>
     <!--region výpis jednoho řádku knihy-->
     <tr>
-
         <td>
             <strong><?php echo htmlspecialchars($row['title']); ?> </strong>
         </td>
@@ -111,5 +108,4 @@ Celkový počet titulů:
 <!--endregion výpis stránkování-->
 <?php }
 
-//vložíme do stránek patičku
 include __DIR__.'/inc/footer.php';

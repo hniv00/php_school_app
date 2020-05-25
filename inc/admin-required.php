@@ -1,5 +1,4 @@
 <?php
-
   //nejprve si vynutíme, aby byl uživatel přihlášený
   require 'user.php';
 

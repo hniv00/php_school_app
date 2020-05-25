@@ -1,5 +1,4 @@
 <?php
-  //načteme připojení k databázi a inicializujeme session
   require_once 'inc/user.php';
 
   use PHPMailer\PHPMailer\PHPMailer;
@@ -50,10 +49,10 @@
       $mailer->isSendmail();
 
       //nastavení adresy příjemce a odesílatele
-      $mailer->addAddress($user['email'],$user['name']);//příjemce mailu; POZOR: server eso.vse.cz umí posílat maily jen na školní e-maily!
-      $mailer->setFrom('hniv00@vse.cz'); //TODO na tomhle řádku by mělo být nastavení reálné adresy odesílatele
+      $mailer->addAddress($user['email'],$user['name']); // příjemce mailu
+      $mailer->setFrom('hniv00@vse.cz'); // adresa odesílatele
 
-      //nastavíme kódování a předmět e-mailu
+      // kódování a předmět e-mailu
       $mailer->CharSet='utf-8';
       $mailer->Subject='Obnova zapomenutého hesla';
 
@@ -108,5 +107,4 @@
   ?>
 
 <?php
-  //vložíme do stránek patičku
   include __DIR__.'/inc/footer.php';

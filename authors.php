@@ -1,8 +1,6 @@
 <?php
-  //přístup jen pro admina
   require 'inc/admin-required.php';
 
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
     #region zjištění hodnoty offsetu pro stránkování
@@ -47,7 +45,6 @@ Celkový počet autorů v databázi:
 
     <?php foreach($authors as $row){ ?>
     <tr>
-
         <td>
             <?php echo htmlspecialchars($row['name']); ?>
         </td>
@@ -76,5 +73,4 @@ Celkový počet autorů v databázi:
 <!--endregion výpis stránkování-->
 <?php }
 
-//vložíme do stránek patičku
 include __DIR__.'/inc/footer.php';

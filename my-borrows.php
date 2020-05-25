@@ -1,15 +1,12 @@
 <?php
-  //načteme připojení k databázi a inicializujeme session
   require_once 'inc/user.php';
-
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
   #region načtení knih pro výpis
   $stmt = $db->prepare("SELECT * FROM books RIGHT JOIN (SELECT * from loans WHERE currently_borrowed=1 and user_id=:userId) AS CURR on (books.book_id=CURR.book_id) ORDER BY books.title DESC");
   $stmt->execute([':userId'=>@$_SESSION['user_id']]);
 
-  $books = $stmt->fetchAll(PDO::FETCH_ASSOC);   //získáme všechny načtené položky do pole
+  $books = $stmt->fetchAll(PDO::FETCH_ASSOC);   // načtené položky do pole
   #endregion načtení knih pro výpis
 
   // počet knih
@@ -22,7 +19,7 @@
 <h2>Moje výpůjčky</h2>
 
 Celkový počet aktuálně vypůjčených knih:
-<strong><?php echo implode($count);/*v proměnné $count máme číslo, nemusíme tedy ošetřovat speciální znaky*/ ?></strong>
+<strong><?php echo implode($count);?></strong>
 
 <br /><br />
 
@@ -58,5 +55,4 @@ Celkový počet aktuálně vypůjčených knih:
     echo '<p>Aktuálně nemáte vypůjčené žádné knihy.</p>';
 }
 
-//vložíme do stránek patičku
 include __DIR__.'/inc/footer.php';

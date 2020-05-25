@@ -1,8 +1,6 @@
 <?php
-  //načteme připojení k databázi a inicializujeme session
   require_once 'inc/admin-required.php';
 
-  //vložíme do stránek hlavičku
   include __DIR__.'/inc/header.php';
 
   #region načtení knih pro výpis
@@ -11,7 +9,7 @@
                         LEFT JOIN (SELECT * from users) AS US on (CURR.user_id=US.user_id) 
                         ORDER BY CURR.loan_id DESC");
   $stmt->execute();
-  $loans = $stmt->fetchAll(PDO::FETCH_ASSOC);   //získáme všechny načtené položky do pole
+  $loans = $stmt->fetchAll(PDO::FETCH_ASSOC);  
   #endregion načtení knih pro výpis
 
   // počet výpůjček
@@ -44,9 +42,12 @@ Celkový počet aktuálních výpůjček:
         </td>
         <td><?php echo date('d.m.Y',strtotime(htmlspecialchars($row['date_borrowed']))); ?></td>
         <td><?php echo htmlspecialchars($row['name']); ?></td>
-        <td class="center">
-            ---
-        </td>
+        <?php 
+            $dateStart = strtotime(htmlspecialchars($row['date_borrowed']));
+            $dateNow = time();
+            $difference = ceil(abs($dateNow - $dateStart) / 86400);
+        ?>
+        <td class="center"><?php echo ''.$difference.' dní'; ?></td>
     </tr>
     <!--endregion výpis jednoho řádku knihy-->
     <?php } ?>
@@ -59,5 +60,4 @@ Celkový počet aktuálních výpůjček:
     echo '<p>Aktuálně nejsou žádnému uživateli vypůjčeny žádné knihy.</p>';
 }
 
-//vložíme do stránek patičku
 include __DIR__.'/inc/footer.php';

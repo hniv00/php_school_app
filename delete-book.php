@@ -1,5 +1,4 @@
 <?php
-  //přístup jen pro admina
   require 'inc/admin-required.php';
 
   //odebrání knihy z DB

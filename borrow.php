@@ -1,5 +1,4 @@
 <?php
-  //přístup jen pro přihlášené
   require 'inc/user.php';
 
   // ověření, že daná kniha je volná k vypůjčení
