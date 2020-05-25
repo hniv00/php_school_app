@@ -41,7 +41,7 @@
                                     <a class="nav-link text-light" href="current-loans.php">Přehled výpůjček</a>
                                   </li>';
                               echo '<li class="nav-item">
-                                    <a class="nav-link text-light" href="#">Uživatelé</a>
+                                    <a class="nav-link text-light" href="all-users.php">Uživatelé</a>
                                   </li>';
                           }
                         ?>
