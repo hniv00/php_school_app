@@ -11,17 +11,29 @@
     }
     #endregion zjištění hodnoty offsetu pro stránkování
   
-    #region zjištění počtu autorů pro stránkování
+    #region zjištění počtu uživatelů pro stránkování
     $count = $db->query("SELECT COUNT(user_id) FROM users")->fetchColumn(); 
     #endregion zjištění počtu knih pro stránkování
   
-    #region načtení autorů pro výpis
-    $stmt = $db->prepare("SELECT * FROM users ORDER BY user_id DESC LIMIT 10 OFFSET ?");
-    $stmt->bindValue(1, $offset, PDO::PARAM_INT); 
-    $stmt->execute();
-  
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);  
-    #endregion načtení autorů pro výpis
+    if (!empty($_GET['userAdmin'])){
+      #region načtení uživatelů - podle práv
+      $stmt = $db->prepare("SELECT * FROM users WHERE admin_rights=? ORDER BY user_id DESC LIMIT 10 OFFSET ?");
+      $stmt->bindValue(1, $_GET['userAdmin'], PDO::PARAM_INT);
+      $stmt->bindValue(2, $offset, PDO::PARAM_INT); 
+      $stmt->execute();
+    
+      $users = $stmt->fetchAll(PDO::FETCH_ASSOC);  
+      #endregion načtení uživatelů - podle práv
+    }else{
+      #region načtení uživatelů 
+      $stmt = $db->prepare("SELECT * FROM users ORDER BY user_id DESC LIMIT 10 OFFSET ?");
+      $stmt->bindValue(1, $offset, PDO::PARAM_INT); 
+      $stmt->execute();
+    
+      $users = $stmt->fetchAll(PDO::FETCH_ASSOC);  
+      #endregion načtení uživatelů 
+    }
+
   ?>
 
 <h2>Seznam uživatelů</h2>
@@ -29,6 +41,31 @@
 Celkový počet uživatelů v databázi:
 <strong><?php echo $count;?></strong>
 
+<br /><br />
+<?php
+#region formulář s výběrem admin
+  echo '<form method="get" id="adminFilterForm">
+          <select name="userAdmin" id="userAdmin" class="form-control" onchange="document.getElementById(\'adminFilterForm\').submit();">
+            <option value=""';
+            if (''==@$_GET['userAdmin']){
+             echo ' selected="selected" ';
+            } 
+            echo '     >-- všichni uživatelé --</option>
+            <option value="1" ';
+             if ('1'==@$_GET['userAdmin']){
+              echo ' selected="selected" ';
+            } 
+            echo '>administrátoři</option>
+            <option value="0"  ';
+            if ('0'==@$_GET['userAdmin']){
+             echo ' selected="selected" ';
+           } 
+           echo '>běžní uživatelé</option>
+          </select>
+          <input type="submit" value="OK" class="d-none" />
+        </form>';
+#endregion formulář s výběrem admin
+?>
 <br /><br />
 
 <?php if ($count>0){ ?>
