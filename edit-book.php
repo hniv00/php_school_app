@@ -7,6 +7,7 @@
   $title='';
   $description='';
   $bookId='';
+  $authorsIds=[];
 
   #region načtení knihy k aktualizaci a výpočet zámku pro pessimistic lock
   // edit_expired je výpočet zámku s boolean hodnotou, jestli již zámek vypršel (starší než 5 minut)
@@ -15,14 +16,19 @@
   $stmt->execute([':id'=>@$_REQUEST['id']]);
   $books = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$books){
-      // kniha neexistuje 
-      die("Zadaná kniha neexistuje. Zkontrolujte, že jste vybrali správně a zkuste to, prosím, znovu.");
-    }
+  if (!$books){ // kniha neexistuje 
+    die("Zadaná kniha neexistuje. Zkontrolujte, že jste vybrali správně a zkuste to, prosím, znovu.");
+  }
 
   $bookId=$books['book_id'];
   $title=$books['title'];
   $description=$books['description'];
+
+  // načtení autorů
+  $query = $db->prepare('SELECT author_id FROM book_author WHERE book_id=:id');
+  $query->execute([':id'=>@$_REQUEST['id']]);
+  $authorsIds = $query->fetch(PDO::FETCH_ASSOC);
+
   #endregion načtení knihy k aktualizaci a výpočet zámku pro pessimistic lock
 
   #region vyřešení pesimistického zámku pro úpravu
@@ -45,8 +51,12 @@
   if (!empty($_POST)) {
     $formErrors=[];
 
+    $authorsIds=[];
     $title=trim(@$_POST['title']);
     $description=trim(@$_POST['description']);
+    foreach ($_POST['authors'] as $a){
+      array_push($authorsIds, $a);
+    }
 
     #region kontrola zaslaných dat
     if (empty($title)){
@@ -55,7 +65,20 @@
     if (empty($description)){
         $formErrors['description']='Musíte zadat popisek knihy.';
     }
-    // TODO: kontrola pro autory
+    if (empty($authorsIds)){ // speciálně kontrola autorů
+        $formErrors['authors']='Musíte vybrat alespoň jednoho autora.';
+    }else {
+      foreach ($_POST['authors'] as $a){
+        $qry=$db->prepare('SELECT * FROM authors WHERE author_id=:id LIMIT 1;');
+        $qry->execute([
+          ':id'=>$a
+        ]);
+        if ($qry->rowCount()==0){
+          $formErrors['authors']='Některý ze zvolených autorů neexistuje.';
+          $_POST['authors']=[];
+        }
+      }
+    }
     #endregion kontrola zaslaných dat
 
     if (empty($formErrors)){
@@ -68,6 +91,19 @@
           ':description'=> $description,
           ':id'=> $books['book_id']
         ]);
+
+        // aktualizace pomocné tabulky pro autory
+        // nejprve smazat dosavadní autory knihy
+        $deleteQuery = $db->prepare("DELETE FROM book_author WHERE book_id=?");
+        $deleteQuery->execute([$books['book_id']]);
+        // poté vložit nové autory
+        foreach ($_POST['authors'] as $a){
+          $insertQuery=$db->prepare('INSERT INTO book_author (book_id, author_id) VALUES (:book, :author);');
+          $insertQuery->execute([
+            ':book'=> $books['book_id'],
+            ':author'=> $a,
+          ]);
+        }
         #endregion aktualizace knihy
       }else{
         #region uložení nové knihy
@@ -76,6 +112,19 @@
           ':title'=> $title,
           ':description'=> $description,
         ]);
+
+
+        // vložit autory do pomocné tabulky
+        foreach ($_POST['authors'] as $a){
+          // vybrat dané id knihy
+          $last_id = $db->lastInsertId();
+
+          $insertQuery=$db->prepare('INSERT INTO book_author (book_id, author_id) VALUES (:book, :author);');
+          $insertQuery->execute([
+            ':book'=> $last_id,
+            ':author'=> $a,
+          ]);
+        }
         #endregion uložení nové knihy
       }
 
@@ -94,11 +143,6 @@
   }
 ?>
 
-<?php
-      if (!empty($formErrors)){
-        echo '<p style="color:red;">'.$formErrors.'</p>';
-      }
-    ?>
 
 <div class="container">
     <form method="post">
@@ -109,22 +153,45 @@
             <input type="text" class="form-control" name="title" id="title"
                 value="<?php echo htmlspecialchars(@$title);?>" required>
             <?php
-                  if (!empty($errors['title'])){
-                    echo '<div class="invalid-feedback">'.$errors['title'].'</div>';
+                  if (!empty($formErrors['title'])){
+                    echo '<div class="invalid-feedback">'.$formErrors['title'].'</div>';
                   }
                 ?>
         </div>
+
         <div class="form-group">
             <label for="description">Popis</label><br />
-            <textarea class="form-control" name="description"
+            <textarea class="form-control" name="description" required
                 id="description"><?php echo htmlspecialchars(@$description)?></textarea>
             <?php
-              if (!empty($errors['description'])){
-                echo '<div class="invalid-feedback">'.$errors['description'].'</div>';
+              if (!empty($formErrors['description'])){
+                echo '<div class="invalid-feedback">'.$formErrors['description'].'</div>';
               }
             ?>
         </div>
         <br />
+
+        <div class="form-group">
+            <label for="authors">Autor/autoři</label>
+            <select name="authors[ ]" id="authors" required multiple="multiple" size="3"
+                class="form-control <?php echo (!empty($formErrors['authors'])?'is-invalid':''); ?>">
+                <?php
+                  $authorQuery=$db->prepare('SELECT * FROM authors ORDER BY name;');
+                  $authorQuery->execute();
+                  $authors=$authorQuery->fetchAll(PDO::FETCH_ASSOC);
+                  if (!empty($authors)){
+                    foreach ($authors as $author){
+                      echo '<option value="'.$author['author_id'].'" '.(in_array($author['author_id'], $authorsIds)?'selected="selected"':'').'>'.htmlspecialchars($author['name']).'</option>';
+                    }
+                  }
+                ?>
+            </select>
+            <?php
+              if (!empty($formErrors['authors'])){
+                echo '<div class="invalid-feedback">'.$formErrors['authors'].'</div>';
+              }
+            ?>
+        </div>
 
         <button type="submit" class="btn btn-info">Uložit</button>
         <a href="catalog.php" class="btn btn-light">Zrušit</a>
@@ -132,9 +199,7 @@
     </form>
 </div>
 
-</body>
-
-</html>
+<br />
 
 <?php
   include __DIR__.'/inc/footer.php';

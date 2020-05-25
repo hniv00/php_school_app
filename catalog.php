@@ -16,7 +16,7 @@
     #endregion zjištění počtu knih pro stránkování
   
     #region načtení knih pro výpis
-    $stmt = $db->prepare("SELECT * FROM books LEFT JOIN (SELECT currently_borrowed, book_id as loan_book_id from loans WHERE currently_borrowed=1) AS CURR on (books.book_id=CURR.loan_book_id) ORDER BY books.book_id DESC LIMIT 10 OFFSET ?");//načítáme maximálně 10 položek z databáze
+    $stmt = $db->prepare("SELECT * FROM books LEFT JOIN (SELECT currently_borrowed, book_id as loan_book_id from loans WHERE currently_borrowed=1) AS CURR on (books.book_id=CURR.loan_book_id) ORDER BY books.title LIMIT 10 OFFSET ?");//načítáme maximálně 10 položek z databáze
     $stmt->bindValue(1, $offset, PDO::PARAM_INT); //offset předáváme s uvedením datového typu; s ohledem na to, že ale máme ověřeno, že v proměnné $offset je číslo, mohli bychom ho i přímo připojit do dotazu
     $stmt->execute();
   
