@@ -1,5 +1,6 @@
 <?php
   require_once 'inc/user.php';
+  require_once 'inc/facebook.php';
 
   if (!empty($_SESSION['user_id'])){
     // uživatel už je přihlášený, nemá smysl, aby se přihlašoval znovu
@@ -60,6 +61,25 @@
     <a href="forgotten-password.php" class="btn btn-light">Zapomněl(a) jsem heslo</a>
     <a href="registration.php" class="btn btn-light">Registrovat se</a>
     <a href="index.php" class="btn btn-light">Zrušit</a>
+
+    <?php
+    #region přihlašování pomocí Facebooku
+    //inicializujeme helper pro vytvoření odkazu
+    $fbHelper = $fb->getRedirectLoginHelper();
+
+    //nastavení parametrů pro vyžádání oprávnění a odkaz na přesměrování po přihlášení
+    $permissions = ['email'];
+    $callbackUrl = htmlspecialchars('https://eso.vse.cz/~hniv00/fb-callback.php');
+    //TODO nezapomeňte v předchozím řádku upravit adresu ke své vlastní aplikaci
+
+    //necháme helper sestavit adresu pro odeslání požadavku na přihlášení
+    $fbLoginUrl = $fbHelper->getLoginUrl($callbackUrl, $permissions);
+
+    //vykreslíme odkaz na přihlášení
+    echo ' <a href="'.$fbLoginUrl.'" class="btn btn-info">Přihlásit se pomocí Facebooku</a>';
+    #endregion přihlašování pomocí Facebooku
+    ?>
+
 </form>
 
 <?php
