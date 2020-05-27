@@ -27,7 +27,9 @@
   // načtení autorů
   $query = $db->prepare('SELECT author_id FROM book_author WHERE book_id=:id');
   $query->execute([':id'=>@$_REQUEST['id']]);
-  $authorsIds = $query->fetch(PDO::FETCH_ASSOC);
+  // $authorsIds = $query->fetchColumn();
+  $authorsIds = $query->fetchAll(PDO::FETCH_COLUMN);
+
 
   #endregion načtení knihy k aktualizaci a výpočet zámku pro pessimistic lock
 
